@@ -1,4 +1,6 @@
 '''
+Copyright (c) 2014 Joaquin Duo - File under MIT License
+
 Import this module to enable relative importing on a submodule/subpackage 
 running it as a main module. 
 This is useful for running smoke tests or small scripts within the module.
