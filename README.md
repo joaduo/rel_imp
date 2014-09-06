@@ -4,12 +4,14 @@ The relative_import utility
 Relative import tool for running subpackages or submodules as main scripts (enabling relative imports)
 
 
-How do you use it?
-------------------
+How to use it?
+--------------
+
 Imagine you have 2 modules inside a package called "my_pkg".
 
 That would be:
 
+* my_pkg/__init__.py
 * my_pkg/math_lib.py
 * my_pkg/test.py
 
@@ -28,7 +30,7 @@ if __name__ == '__main__':
     factorize_and_print(0)
     factorize_and_print(-10)
 ```
-If you do "python my_pkg/test.py" it will throw an exception because of the relative import at the first line.
+If you do `python my_pkg/test.py` it will throw an exception because of the relative import at the first line.
 
 PEP 366 presents a workaround like:
 ```python
@@ -41,19 +43,20 @@ from .math_lib import factorize
 
 This will make the code work, but it is not an elegant solution. 
 
-So you can use **relative_import** to make your code look nicer like.
+So you can use `relative_import` to make your code look nicer like. Simply do:
 ```python
 import relative_import
 from .math_lib import factorize
 
 ```
+It is equivalent as the PEP's solution but you don't have to worry about keeping in sync `__package__`'s value
 
 How does it work?
 -----------------
 
-The solution uses the same technique in PEP 366, but setting __package__ through dynamic inspection of the stack. To solve the value of __package__ it compares the current `__main__`'s file with paths at sys.path -or, optionally, a list of paths given in the preferences-.
+It uses the same technique in PEP 366 but `__package__`'s value is set through dynamic inspection of the stack. To solve the value of __package__ it compares the current `__main__`'s file with paths in sys.path - or, optionally, a list of paths given in the preferences-.
 
-For example, for a file in **/home/user/projects/python/math/my_pkg/test.py** given the following paths in sys.path:
+For example, for a file in `/home/user/projects/python/math/my_pkg/test.py` given the following paths in sys.path:
 ```python
 [
 '/home/user/projects/python/',
@@ -67,6 +70,7 @@ Then the base path use to solve __package__ variable will be **/home/user/projec
 
 Preferences
 -----------
+
 This package works out-of-the-box without any configuration, but you can set certain preferences.
 
 To do so, create a relative_import_settings.py in one of your PYTHON_PATHs. Should be like
