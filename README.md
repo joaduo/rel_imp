@@ -56,7 +56,7 @@ import relative_import
 from .math_lib import factorize
 
 ```
-It is equivalent as the PEP's solution but you don't have to worry about keeping in sync `__package__`'s value
+It is equivalent as the PEP's solution but you don't have to worry about keeping in sync `__package__`'s value.
 
 How does it work?
 -----------------
@@ -101,7 +101,8 @@ Create pypi install package.
 Feedback or bugs reporting
 --------------------------
 
-File an issue through github's [issue tracking system](https://github.com/joaduo/relative_import/issues)
+File an issue through github's [issue tracking system](https://github.com/joaduo/relative_import/issues).
+
 You can optionally contact me at joaduo gmail com.
 
 Related PEPs
