@@ -98,6 +98,11 @@ TODO
 
 Create pypi install package.
 
+Feedback or bugs reporting
+--------------------------
+
+File an issue through github's [issue tracking system](https://github.com/joaduo/relative_import/issues)
+You can optionally contact me at joaduo gmail com.
 
 Related PEPs
 ------------
