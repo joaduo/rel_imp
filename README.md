@@ -1,18 +1,32 @@
-The relative_import utility
-===========================
+# The relative_import utility
 
-Relative import tool for running subpackages or submodules as main scripts (enabling relative imports)
+Enabling relative imports in main modules the easy way.
 
-Installation
-------------
+PEP 366 presents a workaround like:
+```python
+if __name__ == "__main__" and __package__ is None:
+    __package__ = "my_pkg"
+
+from .foo import bar
+```
+
+With `relative_import` you can rewrite it as:
+```python
+import relative_import
+from .foo import bar
+```
+
+Free, cleaner, faster and less coupled. (you don't need to specify the package manually)
+
+## Installation
+
 Clone the repo into one of your PYTHON_PATHs
 
 ```
 clone https://github.com/joaduo/relative_import.git
 ```
 
-How to use it?
---------------
+## Example
 
 Imagine you have 2 modules inside a package called "my_pkg".
 
@@ -45,7 +59,6 @@ if __name__ == "__main__" and __package__ is None:
     __package__ = "my_pkg"
 
 from .math_lib import factorize
-
 ```
 
 This will make the code work, but it is not an elegant solution. 
@@ -54,12 +67,10 @@ So you can use `relative_import` to make your code look nicer like. Simply do:
 ```python
 import relative_import
 from .math_lib import factorize
-
 ```
 It is equivalent as the PEP's solution but you don't have to worry about keeping in sync `__package__`'s value.
 
-How does it work?
------------------
+## How does it work?
 
 It uses the same technique in PEP 366 but `__package__`'s value is set through dynamic inspection of the stack. To solve the value of `__package__` it compares the current `__main__`'s file with paths in sys.path - or, optionally, a list of paths given in the preferences-.
 
@@ -75,38 +86,32 @@ It will pick the closest path to the `__main__`'s file that is not the `__main__
 
 Then the base path use to solve `__package__` variable will be `/home/user/projects/python/math/`
 
-Preferences
------------
+## Preferences
 
 This package works out-of-the-box without any configuration, but you can set certain preferences.
 
 To do so, create a `relative_import_settings.py` in one of your PYTHON_PATHs. Should be like
 
 ```python
-
 class Settings(object):
     #Self explanatory, if False relate_import won't work
     relative_import_enabled = True
     #instead of searching in sys.path, use this list
     #beware, if empty, it will look into sys.path anyway
     relative_import_path = ['/some/path/to/project/']
-
 ```
 
-TODO
-----
+## TODO
 
 Create pypi install package.
 
-Feedback or bugs reporting
---------------------------
+## Feedback or bugs reporting
 
 File an issue through github's [issue tracking system](https://github.com/joaduo/relative_import/issues).
 
 You can optionally contact me at joaduo gmail com.
 
-Related PEPs
-------------
+## Related PEPs
 
 * http://legacy.python.org/dev/peps/pep-0328/
 * http://legacy.python.org/dev/peps/pep-0366/
