@@ -125,7 +125,9 @@ Remember that relative_import code runs only on the first time its imported, so 
 
 ## TODO
 
-Create pypi install package.
+1. Create pypi install package.
+2. What would happen if a file inside a .zip does `import relative_import`?
+3. Check testing on other OS (use a farm maybe).
 
 ## Feedback or bugs reporting
 
