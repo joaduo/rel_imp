@@ -26,9 +26,7 @@ Python 2 still supports implicit relative import and will be deprecated in 3, so
 
 Explicit relative imports makes your code less coupled. As [PEP 328](http://legacy.python.org/dev/peps/pep-0328/#rationale-for-relative-imports) says:
 
-```
-Several use cases were presented, the most important of which is being able to rearrange the structure of large packages without having to edit sub-packages. In addition, a module inside a package can't easily import itself without relative imports.
-``` 
+> Several use cases were presented, the most important of which is being able to rearrange the structure of large packages without having to edit sub-packages. In addition, a module inside a package can't easily import itself without relative imports. 
 
 Although it is still a matter of taste. (I personally prefer less code to express the same)
 
@@ -121,7 +119,7 @@ Then the base path use to solve `__package__` variable will be `/home/user/proje
 Relative import shouldn't have any non-desired side effect, but if for some reason you want to disable you can:
 
 1. Comment the `__enable_relative_import()` line in the `__init__.py` or `relative_import.py` file
-2. Create an `relative_import.py` in a PYTHONPATH with higher priority than the installed one
+2. Create an empty `relative_import.py` in a PYTHONPATH with higher priority than the installed one
 
 Remember that relative_import code runs only on the first time its imported, so you won't gain any performance or difference disabling it.
 
