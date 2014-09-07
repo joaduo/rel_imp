@@ -25,35 +25,24 @@ from os import path
 import importlib
 import sys
 
-def __solve_import_paths():
-    try:
-        from relative_import_settings import Settings
-        settings = Settings()
-        if not (settings and settings.relative_import_enabled):
-            if not settings.relative_import_enabled:
-                print >> sys.stderr, 'Relative import not enabled in settings.'
-            return
-        return settings.relative_import_path or list(sys.path)
-    
-    except ImportError:
-        pass
-
-def __get_python_path(caller_dir, import_path):
+def __get_search_path(main_file_dir, sys_path):
+    #List of candidate search paths
     paths = []
     #look for paths containing the file
-    for imp_pth in import_path:
-        imp_pth = path.abspath(imp_pth) 
-        if (imp_pth != caller_dir
-            and imp_pth == path.commonprefix((imp_pth, caller_dir))):
+    for imp_pth in sys_path:
+        #convert relative path to absolute
+        imp_pth = path.abspath(imp_pth)
+        #filter __main__'s file directory, naturally it will be in the sys.path
+        #filter parent paths containing the package 
+        if (imp_pth != main_file_dir
+            and imp_pth == path.commonprefix((imp_pth, main_file_dir))):
             paths.append(imp_pth)
-    #look for the largest common python path
+    
     if paths:
+        #we found candidates
+        #now look for the largest parent search path
         paths.sort()
         return paths[-1]
-
-def __get_package_str(caller_dir, python_path):
-    rel = path.relpath(caller_dir, python_path)
-    return rel.replace(path.sep, '.')
 
 def __enable_relative_import():
     #solve caller locals
@@ -61,41 +50,36 @@ def __enable_relative_import():
     #go to frames back to find who imported us
     for _ in range(2):
         frame = frame.f_back
-    #now we have access to the locals :)
-    caller_locals = frame.f_locals
+    #now we have access to the locals
+    #import ipdb; ipdb.set_trace()
+    main_globals = frame.f_globals
     #already set or not __main__, stop doing anything.
     #In general this function won't be called twice (since it's only called
     #the first time the package is loaded (but could be called the first
     #time from one non __main__ module
-    if caller_locals['__package__'] or caller_locals['__name__'] != '__main__':
-        return 
-    #solve settings
-    import_path = __solve_import_paths()
-    #disabled or no import paths
-    if not import_path:
+    if main_globals['__package__'] or main_globals['__name__'] != '__main__':
         return
-    #solve the relative path to one of the python paths provided
-    caller_dir = caller_locals['__file__']
-    caller_dir = path.dirname(path.abspath(caller_dir))
-    python_path = __get_python_path(caller_dir, import_path)
-    if not python_path:
+    #solve __main__'s file dir
+    main_file_dir = path.dirname(path.abspath(main_globals['__file__']))
+    search_path = __get_search_path(main_file_dir, sys.path)
+    if not search_path:
         return
-    #solve package name
-    pkg_str = __get_package_str(caller_dir, python_path)
-    #import it
+    #solve package name from search path
+    pkg_str = path.relpath(main_file_dir, search_path).replace(path.sep, '.')
+    #import the package in order to set __package__ value later
     try:
-        if '__init__.py' in caller_locals['__file__']:
+        if '__init__.py' in main_globals['__file__']:
             #The __main__ is its own package
             #If we treat it as a normal module it would be imported twice
             sys.modules[pkg_str] = sys.modules['__main__']
             #We need to set __path__ because its needed for
             #relative importing
-            sys.modules[pkg_str].__path__ = [caller_dir]
+            sys.modules[pkg_str].__path__ = [main_file_dir]
         else:
             #we need to import 
             importlib.import_module(pkg_str)
         #finally enable relative import
-        caller_locals['__package__'] = pkg_str
+        main_globals['__package__'] = pkg_str
     except ImportError as e:
         #In many situations we won't care if it fails
         #it will fail anyway if it finds an relative import in __main__
