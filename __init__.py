@@ -13,6 +13,7 @@ Usage:
 
 To enable relative importing in a submodule ran as __main__, you simply import
 this package
+
 import relative_import
 
 Make sure your PYTHON_PATH is correctly set to solve the relative path of the
