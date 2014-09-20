@@ -18,7 +18,7 @@ from .foo import bar
 
 Cleaner, faster and less coupled. (you don't need to specify the package manually)
 
-**Note:** In order to use `relative_import` the module must be inside a package or sub-package. 
+**Note:** In order to use `relative_import` the module you are coding must be inside a package or a sub-package. 
 
 ## Why using explicit relative imports? 
 
@@ -40,13 +40,15 @@ Some reasons:
 
 ## Installation
 
-1. Clone the repo into one of your module search path (paths are generally set through the PYTHONPATH environment variable).
+### Cloning the repo
+Clone the repo into one of your module search path (paths are generally set through the PYTHONPATH environment variable).
 
 ```
 clone https://github.com/joaduo/relative_import.git
 ```
 
-2. Download the `__init__.py` and save as `relative_import.py` in one of your module search path.
+### Downloading the file
+Download the `__init__.py` and save as `relative_import.py` in one of your module search path.
 
 ```
 wget https://raw.githubusercontent.com/joaduo/relative_import/master/__init__.py -O relative_import.py
