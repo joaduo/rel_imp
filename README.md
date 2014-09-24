@@ -127,11 +127,6 @@ Relative import shouldn't have any non-desired side effect, but if for some reas
 
 Remember that relative_import code runs only on the first time its imported, so you won't gain any performance or difference disabling it.
 
-## TODO
-
-1. What would happen if a file inside a .zip does `import relative_import`?
-2. Check testing on other OS (use a farm maybe).
-
 ## Feedback or bugs reporting
 
 File an issue through github's [issue tracking system](https://github.com/joaduo/relative_import/issues).
