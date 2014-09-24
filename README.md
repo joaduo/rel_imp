@@ -38,9 +38,18 @@ Some reasons:
 2. You can have unit test or smoke test within the module.
 3. You simply want to run it without any explicit test to see if at least it imports everything it needs.  
 
-## Installation
+## Installation and Uninstallation
 
-### Downloading the file
+### Install via pip
+```
+pip install relative_import
+```
+Remove it with:
+```
+pip uninstall relative_import
+```
+
+### Install downloading the file
 Download the `relative_import.py` in one your Python's search path.
 
 ```
@@ -113,16 +122,15 @@ Then the base path use to solve `__package__` variable will be `/home/user/proje
 
 Relative import shouldn't have any non-desired side effect, but if for some reason you want to disable you can:
 
-1. Comment the `__enable_relative_import()` line in the `__init__.py` or `relative_import.py` file
-2. Create an empty `relative_import.py` in a PYTHONPATH with higher priority than the installed one
+1. Comment the `__enable_relative_import()` line in the `__init__.py` or `relative_import.py` file (if you downloaded it)
+2. Create an empty `relative_import.py` in a PYTHONPATH with higher priority than the installed one (or uninstall the original one)
 
 Remember that relative_import code runs only on the first time its imported, so you won't gain any performance or difference disabling it.
 
 ## TODO
 
-1. Create pypi install package.
-2. What would happen if a file inside a .zip does `import relative_import`?
-3. Check testing on other OS (use a farm maybe).
+1. What would happen if a file inside a .zip does `import relative_import`?
+2. Check testing on other OS (use a farm maybe).
 
 ## Feedback or bugs reporting
 
