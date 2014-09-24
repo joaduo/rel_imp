@@ -40,18 +40,11 @@ Some reasons:
 
 ## Installation
 
-### Cloning the repo
-Clone the repo into one of your module search path (paths are generally set through the PYTHONPATH environment variable).
-
-```
-clone https://github.com/joaduo/relative_import.git
-```
-
 ### Downloading the file
-Download the `__init__.py` and save as `relative_import.py` in one of your module search path.
+Download the `relative_import.py` in one your Python's search path.
 
 ```
-wget https://raw.githubusercontent.com/joaduo/relative_import/master/__init__.py -O relative_import.py
+wget https://raw.githubusercontent.com/joaduo/relative_import/master/relative_import.py
 ```
 
 ## Example
