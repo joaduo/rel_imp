@@ -1,7 +1,7 @@
 
 from setuptools import setup
 
-name = 'relative_import'
+name = 'rel_imp'
 
 def long_description():
     with open('README', 'r') as f:

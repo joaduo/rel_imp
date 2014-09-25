@@ -1,6 +1,6 @@
-# The relative_import utility
+# The rel_imp utility (explicit relative import)
 
-Enabling relative imports in main modules the easy way.
+Enabling explicit relative imports in main modules the easy way.
 
 For enabling relative import in `__main__` module PEP 366 presents a workaround like:
 ```python
@@ -10,15 +10,15 @@ if __name__ == "__main__" and __package__ is None:
 from .foo import bar
 ```
 
-With `relative_import` you can rewrite it as:
+With `rel_imp` you can rewrite it as:
 ```python
-import relative_import
+import rel_imp; rel_imp.init()
 from .foo import bar
 ```
 
 Cleaner, faster and less coupled. (you don't need to specify the package manually)
 
-**Note:** In order to use `relative_import` the module you are coding must be inside a package or a sub-package. 
+**Note:** In order to use `rel_imp` the module you are coding must be inside a package or a sub-package. 
 
 ## Why using explicit relative imports? 
 
@@ -42,18 +42,18 @@ Some reasons:
 
 ### Install via pip
 ```
-pip install relative_import
+pip install rel_imp
 ```
 Remove it with:
 ```
-pip uninstall relative_import
+pip uninstall rel_imp
 ```
 
 ### Install downloading the file
-Download the `relative_import.py` in one your Python's search path.
+Download the `rel_imp.py` in one your Python's search path.
 
 ```
-wget https://raw.githubusercontent.com/joaduo/relative_import/master/relative_import.py
+wget https://raw.githubusercontent.com/joaduo/rel_imp/master/rel_imp.py
 ```
 
 ## Example
@@ -95,9 +95,9 @@ from .math_lib import factorize
 
 This will make the code work, but it is not an elegant solution. 
 
-So you can use `relative_import` to make your code look nicer. Simply do:
+So you can use `rel_imp` to make your code look nicer. Simply do:
 ```python
-import relative_import
+import rel_imp; rel_imp.init()
 from .math_lib import factorize
 ```
 It is equivalent as the prior solution but you don't have to worry about keeping in sync `__package__`'s value.
@@ -111,7 +111,7 @@ python my_pkg\test.py
 Will add the path to `my_pkg` to `sys.path` and not the current path to `sys.path`. This differ from the linux's behavior - which adds current working dir to sys.path -.
 
 To fix this behavior make sure you have set the correct `sys.path` or you can add this ugly hack before
-importing `relative_import`.
+importing `rel_imp`.
 
 ```python
 import sys, os
@@ -134,18 +134,18 @@ It will pick the closest path to the `__main__`'s file that is not the `__main__
 
 Then the base path use to solve `__package__` variable will be `/home/user/projects/python/math/`
 
-## Disabling relative_import
+## Disabling rel_imp
 
 Relative import shouldn't have any non-desired side effect, but if for some reason you want to disable you can:
 
-1. Comment the `__enable_relative_import()` line in the `__init__.py` or `relative_import.py` file (if you downloaded it)
-2. Create an empty `relative_import.py` in a PYTHONPATH with higher priority than the installed one (or uninstall the original one)
+1. Comment the `__enable_rel_imp()` line in the `__init__.py` or `rel_imp.py` file (if you downloaded it)
+2. Create an empty `rel_imp.py` in a PYTHONPATH with higher priority than the installed one (or uninstall the original one)
 
-Remember that relative_import code runs only on the first time its imported, so you won't gain any performance or difference disabling it.
+Remember that rel_imp code runs only on the first time its imported, so you won't gain any performance or difference disabling it.
 
 ## Feedback or bugs reporting
 
-File an issue through github's [issue tracking system](https://github.com/joaduo/relative_import/issues).
+File an issue through github's [issue tracking system](https://github.com/joaduo/rel_imp/issues).
 
 You can optionally contact me at joaduo gmail com.
 

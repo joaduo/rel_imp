@@ -1,9 +1,11 @@
 #!/bin/bash
 
-#Checking in current platform
-python -m unittest discover
+args="-m unittest discover"
 
-python3 -m unittest discover
+#Checking in current platform
+python $args
+
+python3 $args
 
 #We need to run each test as __main__, if not, we lose the testing
 for t in $(ls rel_imp_tests/*.py) ; do
@@ -12,4 +14,5 @@ for t in $(ls rel_imp_tests/*.py) ; do
 done 
 
 #test in wine
-wine python -m unittest discover
+wine python $args
+wine c:\\Python33\\python.exe $args

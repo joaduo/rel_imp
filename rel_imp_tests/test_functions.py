@@ -2,7 +2,7 @@
 
 '''
 import unittest
-from relative_import import __print_exc, __get_search_path, __solve_pkg
+from rel_imp import __print_exc, __get_search_path, __solve_pkg
 from os import path
 import sys
 
