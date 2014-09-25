@@ -23,7 +23,7 @@ Make sure your PYTHON_PATH is correctly set to solve the relative path of the
 submodule/subpackage.
 
 '''
-
+from __future__ import print_function
 from inspect import currentframe
 from os import path
 import importlib
@@ -52,7 +52,7 @@ def __get_search_path(main_file_dir, sys_path):
 def __print_exc(e):
     msg = ('Exception enabling relative_import for __main__. Ignoring it: %r'
            '\n  relative_import won\'t be enabled.')
-    print >> sys.stderr, msg % e
+    print(msg % e, file=sys.stderr)
 
 def __solve_pkg(main_globals):
     #find __main__'s file directory
@@ -78,19 +78,20 @@ def __solve_pkg(main_globals):
             importlib.import_module(pkg_str)
         #finally enable relative import
         main_globals['__package__'] = pkg_str
+        return pkg_str
     except ImportError as e:
         #In many situations we won't care if it fails, simply report error
         #main will fail anyway if finds an explicit relative import
         __print_exc(e)
 
-def __enable_relative_import():
+def init():
     '''
     Enables explicit relative import in sub-modules when ran as __main__
     '''
     #find caller locals
     frame = currentframe()
     #go two frames back to find who imported us
-    for _ in range(2):
+    for _ in range(1):
         frame = frame.f_back
     #now we have access to the module globals
     main_globals = frame.f_globals
@@ -107,6 +108,3 @@ def __enable_relative_import():
     except Exception as e:
         __print_exc(e)
 
-#Enable relative import in __main__
-#this function will be called only the first import of this module (or reloads)
-__enable_relative_import()

@@ -2,7 +2,7 @@
 
 '''
 import unittest
-import relative_import
+import rel_imp; rel_imp.init()
 from .relimported1 import example_function
 
 class TestRelativeImport(unittest.TestCase):
