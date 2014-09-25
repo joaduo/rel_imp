@@ -34,14 +34,14 @@ def __get_search_path(main_file_dir, sys_path):
     #Gather candidate search paths
     paths = []
     #look for paths containing the file
-    for imp_pth in sys_path:
+    for pth in sys_path:
         #convert relative path to absolute
-        imp_pth = path.abspath(imp_pth)
+        pth = path.abspath(pth)
         #filter __main__'s file directory, naturally it will be in the sys.path
         #filter parent paths containing the package
-        if (imp_pth != main_file_dir
-            and imp_pth == path.commonprefix((imp_pth, main_file_dir))):
-            paths.append(imp_pth)
+        if (pth != main_file_dir
+            and pth == path.commonprefix((pth, main_file_dir))):
+            paths.append(pth)
     #check if we have results
     if paths:
         #we found candidates
