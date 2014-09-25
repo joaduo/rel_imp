@@ -23,6 +23,7 @@ var/
 *.egg
 MANIFEST
 README
+venv
 
 # Installer logs
 pip-log.txt
