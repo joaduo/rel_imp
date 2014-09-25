@@ -1,12 +1,7 @@
 
 from setuptools import setup
-from pip.req import parse_requirements
 
 name = 'relative_import'
-
-# parse_requirements() returns generator of pip.req.InstallRequirement objects
-install_reqs = parse_requirements('requirements.txt')
-reqs = [str(ir.req) for ir in install_reqs]
 
 def long_description():
     with open('README', 'r') as f:
@@ -23,5 +18,5 @@ setup(
   license='MIT',
   url = 'https://github.com/joaduo/'+name,
   keywords = ['explicit', 'relative', 'import'],
-  install_requires=reqs,
+  install_requires=['importlib'],
 )

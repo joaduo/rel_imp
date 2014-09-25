@@ -1,2 +1,1 @@
 include LICENSE README relative_import.py
-recursive-exclude relative_import_tests *

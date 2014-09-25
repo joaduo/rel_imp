@@ -49,25 +49,12 @@ def __get_search_path(main_file_dir, sys_path):
         paths.sort()
         return paths[-1]
 
+def __print_exc(e):
+    msg = ('Exception enabling relative_import for __main__. Ignoring it: %r'
+           '\n  relative_import won\'t be enabled.')
+    print >> sys.stderr, msg % e
 
-def __enable_relative_import():
-    '''
-    Enables explicit relative import in sub-modules when ran as __main__
-    '''
-    #find caller locals
-    frame = currentframe()
-    #go two frames back to find who imported us
-    for _ in range(2):
-        frame = frame.f_back
-    #now we have access to the module globals
-    main_globals = frame.f_globals
-
-    #If __package__ is already set or its not the __main__, stop doing anything.
-    # (in some cases relative_import could be called once from outside
-    # __main__ if it was not called in __main__)
-    # (also a reload of relative_import could trigger this function)
-    if main_globals.get('__package__') or main_globals.get('__name__') != '__main__':
-        return
+def __solve_pkg(main_globals):
     #find __main__'s file directory
     main_file_dir = path.dirname(path.abspath(main_globals['__file__']))
     search_path = __get_search_path(main_file_dir, sys.path)
@@ -94,7 +81,31 @@ def __enable_relative_import():
     except ImportError as e:
         #In many situations we won't care if it fails, simply report error
         #main will fail anyway if finds an explicit relative import
-        print >> sys.stderr, e
+        __print_exc(e)
+
+def __enable_relative_import():
+    '''
+    Enables explicit relative import in sub-modules when ran as __main__
+    '''
+    #find caller locals
+    frame = currentframe()
+    #go two frames back to find who imported us
+    for _ in range(2):
+        frame = frame.f_back
+    #now we have access to the module globals
+    main_globals = frame.f_globals
+
+    #If __package__ is already set or its not the __main__, stop doing anything.
+    # (in some cases relative_import could be called once from outside
+    # __main__ if it was not called in __main__)
+    # (also a reload of relative_import could trigger this function)
+    if main_globals.get('__package__') or main_globals.get('__name__') != '__main__':
+        return
+    
+    try:
+        __solve_pkg(main_globals)
+    except Exception as e:
+        __print_exc(e)
 
 #Enable relative import in __main__
 #this function will be called only the first import of this module (or reloads)
