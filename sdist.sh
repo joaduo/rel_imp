@@ -13,8 +13,8 @@ mkdir venv -p
 cd venv
 virtualenv ./
 source bin/activate
-pip install ../dist/relative_import-0.1.1.tar.gz
-pip uninstall relative_import -y
+pip install ../dist/rel_imp-*.tar.gz
+pip uninstall rel_imp -y
 cd ..
 #rm venv -Rf
 
