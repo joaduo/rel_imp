@@ -66,7 +66,7 @@ def __enable_relative_import():
     # (in some cases relative_import could be called once from outside
     # __main__ if it was not called in __main__)
     # (also a reload of relative_import could trigger this function)
-    if main_globals['__package__'] or main_globals['__name__'] != '__main__':
+    if main_globals.get('__package__') or main_globals.get('__name__') != '__main__':
         return
     #find __main__'s file directory
     main_file_dir = path.dirname(path.abspath(main_globals['__file__']))
