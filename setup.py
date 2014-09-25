@@ -1,5 +1,5 @@
 
-from setuptools import setup, find_packages
+from setuptools import setup
 from pip.req import parse_requirements
 
 name = 'relative_import'
@@ -15,7 +15,6 @@ def long_description():
 setup(
   name = name,
   py_modules = [name],
-  packages = find_packages(),
   version = '0.1.1',
   description = 'Enable explicit relative imports in __main__ module.',
   long_description=long_description(),
