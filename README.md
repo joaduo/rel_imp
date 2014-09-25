@@ -102,6 +102,22 @@ from .math_lib import factorize
 ```
 It is equivalent as the prior solution but you don't have to worry about keeping in sync `__package__`'s value.
 
+## Notes on Windows
+
+For some reason when executing - at least in wine - seems python won't add the current directory to the `sys.path` list, but the path of the ran script. For example running:
+```
+python my_pkg\test.py
+``` 
+Will add the path to `my_pkg` to `sys.path` and not the current path to `sys.path`. This differ from the linux's behavior - which adds current working dir to sys.path -.
+
+To fix this behavior make sure you have set the correct `sys.path` or you can add this ugly hack before
+importing `relative_import`.
+
+```python
+import sys, os
+sys.path.append(os.path.abspath(os.curdir))
+```
+
 ## How does it work?
 
 It uses the same technique in PEP 366 but `__package__`'s value is set through dynamic inspection of the stack. To solve the value of `__package__` it compares the current `__main__`'s file with search paths in sys.path - or, optionally, a list of paths given in the settings -.
