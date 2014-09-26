@@ -6,9 +6,7 @@ args="-m unittest discover "
 #eval "python $args $filter"
 
 if [ "$1" == "wine" ] ; then
-pycmds="python
-python3
-wine python
+pycmds="wine python
 wine c:\\\\\\\\Python33\\\\\\\\python.exe"
 else
 pycmds="python

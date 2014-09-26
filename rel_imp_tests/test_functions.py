@@ -2,21 +2,33 @@
 
 '''
 import unittest
-from rel_imp import __print_exc, __get_search_path, __solve_pkg
+from rel_imp import _print_exc, _get_search_path, _solve_pkg, _try_search_paths
 from os import path
 import sys
+if sys.version_info[0] > 2:
+    from io import StringIO
+else:
+    from StringIO import StringIO
+
 
 class TestRelativeImport(unittest.TestCase):
     def test_functions(self):
-        g = globals()
-        g.get('__print_exc')(Exception('Example'))
+        stderr = sys.stderr 
+        sys.stderr = StringIO()
+        _print_exc(Exception('Example'))
+        _try_search_paths(globals())
         main_file_dir = path.dirname(path.abspath(__file__))
-        g.get('__get_search_path')(main_file_dir, sys.path)
+        _get_search_path(main_file_dir, sys.path)
         main_globals = dict(__file__=__file__)
-        pkg = g.get('__solve_pkg')(main_globals)
+        pkg = _solve_pkg(main_globals)
         self.assertEqual(pkg, 'rel_imp_tests')
         self.assertTrue(pkg in sys.modules)
-        
-        
+        err = sys.stderr
+        value = ("Exception enabling relative_import for __main__. Ignoring it:"
+                   " Exception('Example',)\n  relative_import won't be enabled.\n")
+        self.assertEqual(err.getvalue(), value)
+        sys.stderr = stderr
+
+
 if __name__ == "__main__":
     unittest.main()
