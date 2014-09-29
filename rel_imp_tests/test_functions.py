@@ -29,6 +29,5 @@ class TestRelativeImport(unittest.TestCase):
         self.assertEqual(err.getvalue(), value)
         sys.stderr = stderr
 
-
 if __name__ == "__main__":
     unittest.main()

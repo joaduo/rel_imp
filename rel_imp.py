@@ -63,15 +63,14 @@ def _try_search_paths(main_globals):
     #main_file_dir = path.dirname(path.abspath(main_globals['__file__']))
     fl = main_globals['__file__']
     search_path = None
-    if not path.isabs(fl):
+    if not path.isabs(fl) and os.getenv('PWD') :
         #Build absolute path from PWD if possible
-        cwd = os.getenv('PWD', os.getcwd())
-        cwd_fl = path.abspath( path.join(cwd,fl))
+        cwd_fl = path.abspath(path.join(os.getenv('PWD'), fl))
         main_dir = path.dirname(cwd_fl)
         search_path = _get_search_path(main_dir, sys.path)
     
     if not search_path:
-        #try absolute strategy (should be the same...
+        #try absolute strategy (will fail on some symlinks configs)
         main_dir = path.dirname(path.abspath(fl))
         search_path = _get_search_path(main_dir, sys.path)
     
