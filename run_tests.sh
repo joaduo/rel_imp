@@ -37,6 +37,10 @@ if [ "$1" != "wine" ] ; then
       exec_cmd "python $t"
       exec_cmd "python3 $t"
   done
+  
+  discover="-m unittest discover -s rel_imp_tests/unittest_discover/"
+  exec_cmd "python $discover"
+  exec_cmd "python3 $discover"
 fi
 
 echo "$pycmds" | while read pcmd

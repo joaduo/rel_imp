@@ -129,8 +129,7 @@ def init():
     # (in some cases relative_import could be called once from outside
     # __main__ if it was not called in __main__)
     # (also a reload of relative_import could trigger this function)
-    if (main_globals.get('__package__') 
-        or main_globals.get('__name__') != '__main__'
+    if (main_globals.get('__package__')
         or not main_globals.get('__file__')
         ):
         return
