@@ -1,6 +1,8 @@
 #!/bin/bash
 
 args="-m unittest discover "
+#this discover is different since it moves the start path (and gave a bug in the pass)
+discover="-m unittest discover -s rel_imp_tests/unittest_discover/"
 
 #Checking in current platform
 #eval "python $args $filter"
@@ -38,14 +40,13 @@ if [ "$1" != "wine" ] ; then
       exec_cmd "python3 $t"
   done
   
-  discover="-m unittest discover -s rel_imp_tests/unittest_discover/"
-  exec_cmd "python $discover"
-  exec_cmd "python3 $discover"
 fi
+
 
 echo "$pycmds" | while read pcmd
 do
     exec_cmd "$pcmd $args"
+    exec_cmd "$pcmd $discover"
 done
 
 # echo errors $errors
