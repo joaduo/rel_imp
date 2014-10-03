@@ -24,6 +24,7 @@ var/
 MANIFEST
 README
 venv
+local_install.sh
 
 # Installer logs
 pip-log.txt
