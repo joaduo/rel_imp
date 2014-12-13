@@ -28,6 +28,7 @@ from os import path
 import importlib
 import sys
 import os
+import traceback
 
 
 def _get_search_path(main_file_dir, sys_path):
@@ -49,14 +50,12 @@ def _get_search_path(main_file_dir, sys_path):
         paths.sort()
         return paths[-1]
 
+
 def _print_exc(e):
     msg = ('Exception enabling relative_import for __main__. Ignoring it: %r'
            '\n  relative_import won\'t be enabled.')
     _log_error(msg % e)
     
-def _log_error(msg):
-    sys.stderr.write(msg + '\n')
-    sys.stderr.flush()
 
 def _try_search_paths(main_globals):
     #try with abspath
@@ -96,9 +95,11 @@ def _solve_pkg(main_globals):
     if pkg_str.startswith(site_pkgs):
         pkg_str = pkg_str[len(site_pkgs):]
     assert pkg_str
+    _log_debug('pkg_str=%r' % pkg_str)
     #import the package in order to set __package__ value later
     try:
         if '__init__.py' in main_globals['__file__']:
+            _log_debug('__init__ script. His module is its own package')
             #The __main__ is __init__.py => its own package
             #If we treat it as a normal module it would be imported twice
             #So we simply reuse it
@@ -106,7 +107,13 @@ def _solve_pkg(main_globals):
             #We need to set __path__ because its needed for
             #relative importing
             sys.modules[pkg_str].__path__ = [main_dir]
+            #We need to import parent package, because it's 
+            #supposed to be imported, but we fake importing
+            parent_pkg_str = ''.join(pkg_str.split('.')[:-1])
+            if parent_pkg_str:
+                importlib.import_module(parent_pkg_str)
         else:
+            _log_debug('Importing package %r' % pkg_str)
             #we need to import the package to be available
             importlib.import_module(pkg_str)
         #finally enable relative import
@@ -117,10 +124,41 @@ def _solve_pkg(main_globals):
         #main will fail anyway if finds an explicit relative import
         _print_exc(e)
 
-def init():
+
+def _log(msg):
+    sys.stderr.write(msg + '\n')
+    sys.stderr.flush()
+
+
+def _log_debug(msg):
+    if _log_level <= DEBUG:
+        if _log_level == TRACE:
+            traceback.print_stack()
+        _log(msg)
+
+
+def _log_error(msg):
+    if _log_level <= ERROR:
+        _log(msg)
+
+
+ERROR = 40
+DEBUG = 10
+TRACE = 5
+_log_level = ERROR
+
+
+_initialized = False
+def init(log_level=ERROR):
     '''
     Enables explicit relative import in sub-modules when ran as __main__
     '''
+    global _log_level, _initialized
+    if _initialized:
+        _log_debug('rel_imp already initialized.')
+        return
+    _initialized = True
+    _log_level = log_level
     #find caller locals
     frame = currentframe()
     #go 1 frame back to find who imported us
@@ -132,9 +170,11 @@ def init():
     # (in some cases relative_import could be called once from outside
     # __main__ if it was not called in __main__)
     # (also a reload of relative_import could trigger this function)
-    if (main_globals.get('__package__')
-        or not main_globals.get('__file__')
-        ):
+    pkg = main_globals.get('__package__')
+    file_ = main_globals.get('__file__')
+    if pkg or not file_:
+        _log_debug('Package solved or init was called from interactive console.'
+                   '__package__=%r, __file__=%r' % (pkg, file_))
         return
     
     try:
