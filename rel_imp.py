@@ -91,6 +91,10 @@ def _solve_pkg(main_globals):
         return
     #solve package name from search path
     pkg_str = path.relpath(main_dir, search_path).replace(path.sep, '.')
+    #Remove wrong starting string for site-packages
+    site_pkgs = 'site-packages.'
+    if pkg_str.startswith(site_pkgs):
+        pkg_str = pkg_str[len(site_pkgs):]
     assert pkg_str
     #import the package in order to set __package__ value later
     try:
@@ -119,9 +123,8 @@ def init():
     '''
     #find caller locals
     frame = currentframe()
-    #go two frames back to find who imported us
-    for _ in range(1):
-        frame = frame.f_back
+    #go 1 frame back to find who imported us
+    frame = frame.f_back
     #now we have access to the module globals
     main_globals = frame.f_globals
 
