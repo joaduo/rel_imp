@@ -12,9 +12,10 @@ else:
 
 
 class TestRelativeImport(unittest.TestCase):
+
     def test_functions(self):
-        #swap stderr
-        stderr = sys.stderr 
+        # swap stderr
+        stderr = sys.stderr
         sys.stderr = StringIO()
         _print_exc(Exception('Example'))
         _try_search_paths(globals())
@@ -24,7 +25,7 @@ class TestRelativeImport(unittest.TestCase):
         pkg = _solve_pkg(main_globals)
         self.assertEqual(pkg, 'rel_imp_tests')
         self.assertTrue(pkg in sys.modules)
-        #swap stderr again
+        # swap stderr again
         err = sys.stderr
         sys.stderr = stderr
         value = ("Exception enabling relative_import for __main__. Ignoring it:"
