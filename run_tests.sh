@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# Unittest arguments
 py_args="-m unittest discover "
-#this discover is different since it moves the start path (and gave a bug in the pass)
+# This discover is different since it moves the start path (and previously create a now-fixed bug)
 discover="-m unittest discover -s rel_imp_tests/unittest_discover/"
 
+# Print help if --help was passed
 if [[ "$*" == *--help* ]] ; then
   #Test commands in for wine
   help="
@@ -22,13 +24,13 @@ options
   exit 0
 fi
 
-
+#set verbose flag
 verbose=""
 if [[ "$*" == *-v* ]] ; then
   verbose="True"
 fi
 
-
+#Set python commands (python 2, 3 or wine)
 if [[ "$*" == *--wine* ]] ; then
   #Test commands in for wine
   pycmds="wine python
@@ -46,7 +48,7 @@ python3"
 fi
 
 
-#Log executed commands
+# Function to log executed commands and return their return value
 function exec_test(){
   local out=$(eval "$*" 2>&1 )
   if [ -n "$verbose" ] ; then
@@ -67,36 +69,47 @@ function exec_test(){
 
 
 function run_tests(){
-  let test_errored=0
+  # Error flag, if 1, there was an error
+  let error_flag=0
+  # We don't run these tests on wine (not sure why)
   if [[ "$*" != *--wine* ]] ; then
-    #We need to run each test as __main__, if not, we lose the point in testing
+    # Run each test script __main__ (because of the nature of rel_imp)
+    # unittest is invoked inside each test script
     for t in $(find rel_imp_tests/ -iname "*.py" -exec grep "unittest" {} -l \;) ; do
         while read -r pcmd ; do
+            # Run test for each python version
             if ! exec_test "$pcmd $t" ; then
-              let test_errored=1
+              # test return value was not 0
+              let error_flag=1
             fi
         done < <(echo "$pycmds")
     done
   fi
 
-  #Now we use unittest discover to check any errors (but not "real" test is done)
+  # Now we use unittest discover to check any other errors, but rel_imp functionality is eclipsed
+  # since scripts are not run as __main__
   while read -r pcmd ; do
+    # Run test for each python version
     while read -r arg ; do
+        # Run test for each unittest invocation
         if ! exec_test "$pcmd $arg" ; then
-          let test_errored=1
+          let error_flag=1
         fi
     done < <(echo "$py_args
 $discover")
   done < <(echo "$pycmds")
   
-  return $test_errored
+  return $error_flag
 }
 
 
+# Main entry point
 if run_tests $* ; then
+    # If everything went OK, we need to print something
     echo 
     echo "-----------> All tests passed OK"
     exit 0
 else
+    # If something went wrong it will display the erroring command
     exit 1
 fi
