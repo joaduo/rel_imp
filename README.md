@@ -1,5 +1,7 @@
 # The rel_imp utility
 
+[ ![Codeship Status for joaduo/rel_imp](https://codeship.com/projects/6634b790-b2f6-0132-44e8-3a4b0bbda320/status?branch=master)](https://codeship.com/projects/70108)
+
 Enabling explicit relative imports in main modules the easy way.
 
 For enabling relative import in `__main__` module PEP 366 presents a workaround like:
@@ -22,7 +24,7 @@ Cleaner, faster and less coupled. (you don't need to specify the package manuall
 
 ## Why using explicit relative imports? 
 
-Python 2 still supports implicit relative import and will be deprecated in 3, so you will want to migrate those scripts using implicit relative import to explicit relative import. Check more on the [PEP 404](http://legacy.python.org/dev/peps/pep-0404/#id18).
+Python 2 still supports implicit relative import and will be deprecated in Python 3, so you will want to migrate those scripts using implicit relative import to explicit relative import. Check more on the [PEP 404](http://legacy.python.org/dev/peps/pep-0404/#id18).
 
 Explicit relative imports makes your code less coupled. As [PEP 328](http://legacy.python.org/dev/peps/pep-0328/#rationale-for-relative-imports) says:
 
