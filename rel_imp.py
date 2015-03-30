@@ -19,7 +19,7 @@ import relative_import
 
 from .my_pkg import foo, bar
 
-Make sure your PYTHON_PATH is correctly set to solve the relative path of the
+Make sure your PYTHONPATH is correctly set to solve the relative path of the
 submodule/subpackage.
 
 '''
@@ -188,22 +188,37 @@ _log_level = ERROR
 # Keeps track of rel_imp initialization
 _initialized = False
 
-
 def init(log_level=ERROR):
     '''
     Enables explicit relative import in sub-modules when ran as __main__
     :param log_level: module's inner logger level (equivalent to logging pkg)
     '''
+    # find caller's frame
+    frame = currentframe()
+    # go 1 frame back to find who imported us
+    frame = frame.f_back
+    _init(frame, log_level)
+
+
+def init_implicitly(log_level=ERROR):
+    # find caller's frame
+    frame = currentframe()
+    while frame.f_globals['__name__'] != '__main__':
+        frame = frame.f_back
+    _init(frame, log_level)
+
+
+def _init(frame, log_level=ERROR):
+    '''
+    Enables explicit relative import in sub-modules when ran as __main__
+    :param log_level: module's inner logger level (equivalent to logging pkg)
+    '''
     global _log_level, _initialized
+    _log_level = log_level
     if _initialized:
         _log_debug('rel_imp already initialized.')
         return
     _initialized = True
-    _log_level = log_level
-    # find caller locals
-    frame = currentframe()
-    # go 1 frame back to find who imported us
-    frame = frame.f_back
     # now we have access to the module globals
     main_globals = frame.f_globals
 
@@ -222,3 +237,4 @@ def init(log_level=ERROR):
         _solve_pkg(main_globals)
     except Exception as e:
         _print_exc(e)
+
