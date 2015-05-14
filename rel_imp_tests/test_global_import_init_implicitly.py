@@ -3,7 +3,7 @@
 '''
 import unittest
 
-import relative_import #@UnusedImport
+import relative_import  # @UnusedImport
 from .relimported1 import example_function
 
 

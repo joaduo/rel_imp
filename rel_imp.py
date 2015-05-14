@@ -188,6 +188,7 @@ _log_level = ERROR
 # Keeps track of rel_imp initialization
 _initialized = False
 
+
 def init(log_level=ERROR):
     '''
     Enables explicit relative import in sub-modules when ran as __main__
@@ -237,4 +238,3 @@ def _init(frame, log_level=ERROR):
         _solve_pkg(main_globals)
     except Exception as e:
         _print_exc(e)
-
