@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# We need the current path
+export PYTHONPATH="./:$PYTHONPATH"
+
 # Unittest arguments
 py_args="-m unittest discover "
 # This discover is different since it moves the start path (and previously create a now-fixed bug)
