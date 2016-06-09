@@ -15,7 +15,7 @@ Usage:
 To enable explicit relative importing in __main__, you simply import
 this package before any relative import
 
-import relative_import
+import rel_imp; rel_imp.init()
 
 from .my_pkg import foo, bar
 
@@ -29,6 +29,9 @@ import importlib
 import sys
 import os
 import traceback
+
+
+__all__ = ['init']
 
 
 def _get_search_path(main_file_dir, sys_path):

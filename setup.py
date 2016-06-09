@@ -11,7 +11,7 @@ def long_description():
 setup(
     name=name,
     py_modules=[name],
-    version='0.2',
+    version='0.2.1',
     description='Enable explicit relative imports in __main__ module.',
     long_description=long_description(),
     author='Joaquin Duo',

@@ -73,7 +73,7 @@ So in test.py we could have
 ```python
 from .math_lib import factorize
 
-def print_factorize(number):
+def factorize_and_print(number):
     num = factorize(number)
     print num
 
@@ -138,7 +138,7 @@ Then the base path use to solve `__package__` variable will be `/home/user/proje
 
 ## Disabling rel_imp
 
-Relative import shouldn't have any non-desired side effect, but if for some reason you want to disable you can:
+Relative import shouldn't have any non-desired side effect, but if for some reason you want to disable it:
 
 1. Replace the `def init()` function in the `rel_imp.py` file (if you downloaded it)
 2. Create an empty `rel_imp.py` with a dummy `init()` in a PYTHONPATH with higher priority than the installed one (or optionally uninstall the original one)
