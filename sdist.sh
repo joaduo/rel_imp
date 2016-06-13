@@ -5,7 +5,10 @@ ret=$?
 if [[ "$ret" == "0" ]] ; then
 
 	#Convert markdown to rst
-	pandoc --from=markdown --to=rst --output=README README.md
+	if ! pandoc --from=markdown --to=rst --output=README README.md ; then
+		echo "pandoc command failed. Probably it is not installed. Aborting."
+		exit 1
+	fi
 	
 	#build package
 	python setup.py sdist && python setup.py check -r
