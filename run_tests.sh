@@ -1,5 +1,9 @@
 #!/bin/bash
 
+pushd /tmp
+    pip uninstall rel_imp
+popd
+
 # We need the current path
 export PYTHONPATH="./:$PYTHONPATH"
 

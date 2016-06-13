@@ -222,7 +222,6 @@ def _init(frame, log_level=ERROR):
     if _initialized:
         _log_debug('rel_imp already initialized.')
         return
-    _initialized = True
     # now we have access to the module globals
     main_globals = frame.f_globals
 
@@ -236,8 +235,9 @@ def _init(frame, log_level=ERROR):
         _log_debug('Package solved or init was called from interactive '
                    'console. __package__=%r, __file__=%r' % (pkg, file_))
         return
-
     try:
         _solve_pkg(main_globals)
     except Exception as e:
         _print_exc(e)
+    # with or without exception we will no longer try to initialize
+    _initialized = True
