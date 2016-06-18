@@ -1,5 +1,7 @@
 # The rel_imp utility
 
+[ ![Codeship Status for joaduo/rel_imp](https://codeship.com/projects/6634b790-b2f6-0132-44e8-3a4b0bbda320/status?branch=master)](https://codeship.com/projects/70108)
+
 Enabling explicit relative imports in main modules the easy way.
 
 For enabling relative import in `__main__` module PEP 366 presents a workaround like:
