@@ -86,39 +86,12 @@ if __name__ == '__main__':
 
 If you do `python my_pkg/test.py` it will throw an exception because of the relative import at the first line.
 
-PEP 366 presents a workaround like:
-
-```python
-if __name__ == "__main__" and __package__ is None:
-    __package__ = "my_pkg"
-
-from .math_lib import factorize
-```
-
-This will make the code work, but it is not an elegant solution. 
-
 So you can use `rel_imp` to make your code look nicer. Simply do:
 ```python
 import rel_imp; rel_imp.init()
 from .math_lib import factorize
 ```
 It is equivalent as the prior solution but you don't have to worry about keeping in sync `__package__`'s value.
-
-## Notes on Windows
-
-For some reason when executing - at least in wine - seems python won't add the current directory to the `sys.path` list, but the path of the ran script. For example running:
-```
-python my_pkg\test.py
-``` 
-Will add the path to `my_pkg` to `sys.path` and not the current path to `sys.path`. This differ from the linux's behavior - which adds current working dir to sys.path -.
-
-To fix this behavior make sure you have set the correct `sys.path` or you can add this ugly hack before
-importing `rel_imp`.
-
-```python
-import sys, os
-sys.path.append(os.path.abspath(os.curdir))
-```
 
 ## How does it work?
 
