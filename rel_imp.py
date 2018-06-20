@@ -197,6 +197,11 @@ def init(log_level=ERROR):
     Enables explicit relative import in sub-modules when ran as __main__
     :param log_level: module's inner logger level (equivalent to logging pkg)
     '''
+    global _initialized
+    if _initialized:
+        return
+    else:
+        _initialized = True
     # find caller's frame
     frame = currentframe()
     # go 1 frame back to find who imported us
@@ -205,6 +210,11 @@ def init(log_level=ERROR):
 
 
 def init_implicitly(log_level=ERROR):
+    global _initialized
+    if _initialized:
+        return
+    else:
+        _initialized = True
     # find caller's frame
     frame = currentframe()
     while frame.f_globals['__name__'] != '__main__':
@@ -217,11 +227,8 @@ def _init(frame, log_level=ERROR):
     Enables explicit relative import in sub-modules when ran as __main__
     :param log_level: module's inner logger level (equivalent to logging pkg)
     '''
-    global _log_level, _initialized
+    global _log_level
     _log_level = log_level
-    if _initialized:
-        _log_debug('rel_imp already initialized.')
-        return
     # now we have access to the module globals
     main_globals = frame.f_globals
 
@@ -239,5 +246,3 @@ def _init(frame, log_level=ERROR):
         _solve_pkg(main_globals)
     except Exception as e:
         _print_exc(e)
-    # with or without exception we will no longer try to initialize
-    _initialized = True
