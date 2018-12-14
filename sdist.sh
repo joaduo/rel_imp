@@ -27,6 +27,15 @@ if [[ "$ret" == "0" ]] ; then
             pip uninstall $app -y
             cd ..
             #rm venv -Rf
+
+            mkdir venv3 -p
+            cd venv3
+            virtualenv ./ -p python3
+            source bin/activate
+            pip install ../dist/$app\-*.tar.gz
+            pip uninstall $app -y
+            cd ..
+            rm venv3 -Rf
     fi
 
     pkg=`ls dist/$app\-*.tar.gz`
