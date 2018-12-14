@@ -163,7 +163,7 @@ def _log(msg):
 
 def _log_debug(msg):
     '''
-    Log at debug lebel
+    Log at debug level
     :param msg: message to log
     '''
     if _log_level <= DEBUG:
