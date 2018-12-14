@@ -126,7 +126,7 @@ def _solve_pkg(main_globals):
     # import the package in order to set __package__ value later
     try:
         if '__init__.py' in main_globals['__file__']:
-            _log_debug('__init__ script. His module is its own package')
+            _log_debug('__init__ script. This module is its own package')
             # The __main__ is __init__.py => its own package
             # If we treat it as a normal module it would be imported twice
             # So we simply reuse it
