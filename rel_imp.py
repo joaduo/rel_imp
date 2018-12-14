@@ -134,9 +134,9 @@ def _solve_pkg(main_globals):
             # We need to set __path__ because its needed for
             # relative importing
             sys.modules[pkg_str].__path__ = [main_dir]
-            # We need to import parent package, because it's
-            # supposed to be imported, but we fake importing
-            parent_pkg_str = ''.join(pkg_str.split('.')[:-1])
+            # We need to import parent package, something that would
+            # happen automatically in non-faked import
+            parent_pkg_str = '.'.join(pkg_str.split('.')[:-1])
             if parent_pkg_str:
                 importlib.import_module(parent_pkg_str)
         else:
