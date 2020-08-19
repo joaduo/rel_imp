@@ -5,6 +5,7 @@
 Enabling explicit relative imports in main modules the easy way.
 
 For enabling relative import in `__main__` module PEP 366 presents a workaround like:
+
 ```python
 if __name__ == "__main__" and __package__ is None:
     __package__ = "my_pkg"
@@ -13,6 +14,7 @@ from .foo import bar
 ```
 
 With `rel_imp` you can rewrite it as:
+
 ```python
 import rel_imp; rel_imp.init()
 from .foo import bar
@@ -43,10 +45,12 @@ Some reasons:
 ## Installation and Uninstallation
 
 ### Install via pip
+
 ```
 pip install rel_imp
 ```
 Remove it with:
+
 ```
 pip uninstall rel_imp
 ```
@@ -118,7 +122,9 @@ It will pick the closest path to the `__main__`'s file that is not the `__main__
 
 Then the base path use to solve `__package__` variable will be `/home/user/projects/python/math/`
 
-## Disabling rel_imp
+This process is only done once and for the `__main__`. Succesive calls to `rel_imp.init()` does nothing.
+
+## Disabling `rel_imp` initialization
 
 You can simply define a environment variable `PYTHON_DISABLE_REL_IMP` with any value.
 
