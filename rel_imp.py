@@ -5,23 +5,18 @@ Import this module to enable explicit relative importing on a submodule or
 sub-package running it as a main module. Doing so is useful for running smoke
 tests or small scripts within the module.
 
-If you are using this tool enabled on production, make sure you do enough
-testing. (since it does some guessing trying to find the right package of
-the module)
-
 Usage:
 ------
 
 To enable explicit relative importing in __main__, you simply import
 this package before any relative import
 
-import rel_imp; rel_imp.init()
-
-from .my_pkg import foo, bar
+    import rel_imp; rel_imp.init()
+    from .my_pkg import foo, bar
+    ...
 
 Make sure your PYTHONPATH is correctly set to solve the relative path of the
 submodule/subpackage.
-
 '''
 from inspect import currentframe
 from os import path
@@ -196,9 +191,15 @@ def init(log_level=ERROR):
     '''
     Enables explicit relative import in sub-modules when ran as __main__
     :param log_level: module's inner logger level (equivalent to logging pkg)
+
+    Use PYTHON_DISABLE_REL_IMP environment variable to disable the initialization
     '''
     global _initialized
     if _initialized:
+        _log_debug('Initialized. Doing nothing')
+        return
+    elif 'PYTHON_DISABLE_REL_IMP' in os.environ:
+        _log_debug('PYTHON_DISABLE_REL_IMP environment variable present. Doing nothing')
         return
     else:
         _initialized = True
@@ -210,8 +211,15 @@ def init(log_level=ERROR):
 
 
 def init_implicitly(log_level=ERROR):
+    '''
+    Use PYTHON_DISABLE_REL_IMP environment variable to disable the initialization
+    '''
     global _initialized
     if _initialized:
+        _log_debug('Initialized. Doing nothing')
+        return
+    elif 'PYTHON_DISABLE_REL_IMP' in os.environ:
+        _log_debug('PYTHON_DISABLE_REL_IMP environment variable present. Doing nothing')
         return
     else:
         _initialized = True

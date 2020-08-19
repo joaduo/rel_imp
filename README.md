@@ -87,11 +87,20 @@ if __name__ == '__main__':
 If you do `python my_pkg/test.py` it will throw an exception because of the relative import at the first line.
 
 So you can use `rel_imp` to make your code look nicer. Simply do:
+
 ```python
 import rel_imp; rel_imp.init()
 from .math_lib import factorize
 ```
+
 It is equivalent as the prior solution but you don't have to worry about keeping in sync `__package__`'s value.
+
+You can also use a shorter solution with implicit `init()` using the `relative_import` module:
+
+```python
+import relative_import
+from .math_lib import factorize
+```
 
 ## How does it work?
 
@@ -111,12 +120,7 @@ Then the base path use to solve `__package__` variable will be `/home/user/proje
 
 ## Disabling rel_imp
 
-Relative import shouldn't have any non-desired side effect, but if for some reason you want to disable it:
-
-1. Replace the `def init()` function in the `rel_imp.py` file (if you downloaded it)
-2. Create an empty `rel_imp.py` with a dummy `init()` in a PYTHONPATH with higher priority than the installed one (or optionally uninstall the original one)
-
-`rel_imp` is really lightweight so you won't gain any performance difference disabling it.
+You can simply define a environment variable `PYTHON_DISABLE_REL_IMP` with any value.
 
 ## Feedback or bugs reporting
 
