@@ -1,14 +1,8 @@
-'''
-
-'''
 import unittest
 from rel_imp import _print_exc, _get_search_path, _solve_pkg, _try_search_paths
 from os import path
 import sys
-if sys.version_info[0] > 2:
-    from io import StringIO
-else:
-    from StringIO import StringIO
+from six.moves import StringIO
 
 
 class TestRelativeImport(unittest.TestCase):
@@ -29,7 +23,7 @@ class TestRelativeImport(unittest.TestCase):
         err = sys.stderr
         sys.stderr = stderr
         value = ("Exception enabling relative_import for __main__. Ignoring it:"
-                 " Exception('Example',)\n  relative_import won't be enabled.")
+                 " Exception('Example'")
         out = err.getvalue()
         self.assertTrue(out.startswith(value), out)
 
