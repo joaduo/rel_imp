@@ -2,7 +2,7 @@
  
 bash ./run_tests.sh
 ret=$?
-if [[ "$ret" == "0" ]] ; then
+if [[ $ret == "0" ]] ; then
 
     if ! pandoc --from=markdown --to=rst --output=README README.md ; then
         echo "pandoc command failed. Probably it is not installed. Aborting."
@@ -15,7 +15,7 @@ if [[ "$ret" == "0" ]] ; then
 
     rm dist/$app\-*.tar.gz
 
-    python setup.py sdist && python setup.py check -r
+    python3 setup.py sdist && python3 setup.py check -r
 
     if [ "$1" == "venv" ] ;  then
             #test installation
