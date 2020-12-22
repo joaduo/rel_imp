@@ -32,7 +32,11 @@ Explicit relative imports makes your code less coupled. As [PEP 328](http://lega
 
 > Several use cases were presented, the most important of which is being able to rearrange the structure of large packages without having to edit sub-packages. In addition, a module inside a package can't easily import itself without relative imports. 
 
-Although it is still a matter of taste. (I personally prefer less code to express the same)
+On the other hand PEP 8 says:
+
+> Absolute imports are recommended, as they are usually more readable and tend to be better behaved (or at least give better error messages) if the import system is incorrectly configured.
+
+If you find a point to use explicit relative imports, then you can use rel_imp to allow running packages as main.
 
 ## Why running sub-modules as main?
 
