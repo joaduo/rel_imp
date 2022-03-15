@@ -1,4 +1,4 @@
-'''
+"""
 Copyright (c) 2014 Joaquin Duo - File under MIT License
 
 Import this module to enable explicit relative importing on a submodule or
@@ -17,7 +17,7 @@ this package before any relative import
 
 Make sure your PYTHONPATH is correctly set to solve the relative path of the
 submodule/subpackage.
-'''
+"""
 from inspect import currentframe
 from os import path
 import importlib
@@ -25,17 +25,16 @@ import sys
 import os
 import traceback
 
-
 __all__ = ['init']
 
 
 def _get_search_path(main_file_dir, sys_path):
-    '''
+    """
     Find the parent python path that contains the __main__'s file directory
 
     :param main_file_dir: __main__'s file directory
     :param sys_path: paths list to match directory against (like sys.path)
-    '''
+    """
     # List to gather candidate parent paths
     paths = []
     # look for paths containing the directory
@@ -55,17 +54,17 @@ def _get_search_path(main_file_dir, sys_path):
 
 
 def _print_exc(e):
-    '''
+    """
     Log exception as error.
     :param e: exception to be logged.
-    '''
+    """
     msg = ('Exception enabling relative_import for __main__. Ignoring it: %r'
            '\n  relative_import won\'t be enabled.')
     _log_error(msg % e)
 
 
 def _try_search_paths(main_globals):
-    '''
+    """
     Try different strategies to found the path containing the __main__'s file.
     Will try strategies, in the following order:
         1. Building file's path with PWD env var.
@@ -73,7 +72,7 @@ def _try_search_paths(main_globals):
         3. Buidling file's path from real file's path.
 
     :param main_globals: globals dictionary in __main__
-    '''
+    """
     # try with abspath
     fl = main_globals['__file__']
     search_path = None
@@ -148,19 +147,19 @@ def _solve_pkg(main_globals):
 
 
 def _log(msg):
-    '''
+    """
     Central log function (all levels)
     :param msg: message to log
-    '''
+    """
     sys.stderr.write(msg + '\n')
     sys.stderr.flush()
 
 
 def _log_debug(msg):
-    '''
+    """
     Log at debug level
     :param msg: message to log
-    '''
+    """
     if _log_level <= DEBUG:
         if _log_level == TRACE:
             traceback.print_stack()
@@ -168,10 +167,10 @@ def _log_debug(msg):
 
 
 def _log_error(msg):
-    '''
+    """
     Log at error level
     :param msg: message to log
-    '''
+    """
     if _log_level <= ERROR:
         _log(msg)
 
@@ -180,6 +179,7 @@ def _log_error(msg):
 ERROR = 40
 DEBUG = 10
 TRACE = 5
+
 # Set default level
 _log_level = ERROR
 
@@ -188,12 +188,12 @@ _initialized = False
 
 
 def init(log_level=ERROR):
-    '''
+    """
     Enables explicit relative import in sub-modules when ran as __main__
     :param log_level: module's inner logger level (equivalent to logging pkg)
 
     Use PYTHON_DISABLE_REL_IMP environment variable to disable the initialization
-    '''
+    """
     global _initialized
     if _initialized:
         _log_debug('Initialized. Doing nothing')
@@ -211,9 +211,9 @@ def init(log_level=ERROR):
 
 
 def init_implicitly(log_level=ERROR):
-    '''
+    """
     Use PYTHON_DISABLE_REL_IMP environment variable to disable the initialization
-    '''
+    """
     global _initialized
     if _initialized:
         _log_debug('Initialized. Doing nothing')
@@ -231,10 +231,10 @@ def init_implicitly(log_level=ERROR):
 
 
 def _init(frame, log_level=ERROR):
-    '''
+    """
     Enables explicit relative import in sub-modules when ran as __main__
     :param log_level: module's inner logger level (equivalent to logging pkg)
-    '''
+    """
     global _log_level
     _log_level = log_level
     # now we have access to the module globals

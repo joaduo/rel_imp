@@ -7,8 +7,9 @@ name = 'rel_imp'
 def in_python3():
     return sys.version_info[0] > 2
 
+
 def long_description():
-    with open('README', 'r') as f:
+    with open('README.md', 'r') as f:
         if in_python3():
             return f.read()
         else:
