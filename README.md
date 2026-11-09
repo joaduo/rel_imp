@@ -83,7 +83,7 @@ from .math_lib import factorize
 
 def factorize_and_print(number):
     num = factorize(number)
-    print num
+    print(num)
 
 if __name__ == '__main__':
     #Small smoke test

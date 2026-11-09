@@ -1,8 +1,7 @@
-'''
-
-'''
 import unittest
-import relative_import
+
+import relative_import  # noqa: F401 - imported for its init side effect
+
 from ..relimported1 import example_function
 
 

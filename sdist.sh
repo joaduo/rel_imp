@@ -4,18 +4,14 @@ bash ./run_tests.sh
 ret=$?
 if [[ $ret == "0" ]] ; then
 
-    if ! pandoc --from=markdown --to=rst --output=README README.md ; then
-        echo "pandoc command failed. Probably it is not installed. Aborting."
-        exit 1
-    fi
-    #Clean output urls
-    sed 's/\\\_/_/g' -i README
-
     app="rel_imp"
 
-    rm dist/$app\-*.tar.gz
+    rm -f dist/$app\-*.tar.gz
 
-    python3 setup.py sdist && python3 setup.py check -r
+    if ! python3 -m build ; then
+        echo "build failed. You may need to: pip install build"
+        exit 1
+    fi
 
     if [ "$1" == "venv" ] ;  then
             #test installation
@@ -43,4 +39,3 @@ if [[ $ret == "0" ]] ; then
     echo "upload with: twine upload $pkg"
 
 fi
-
