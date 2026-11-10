@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rel_imp"
+version = "0.2.8"
+description = "Enable explicit relative imports in __main__ module."
+readme = "README.md"
+authors = [
+    {name = "Joaquin Duo", email = "joaduo@gmail.com"},
+]
+license = "MIT"
+requires-python = ">=3.9"
+keywords = ["explicit", "relative", "import"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/joaduo/rel_imp"
+Issues = "https://github.com/joaduo/rel_imp/issues"
+
+[tool.setuptools]
+py-modules = ["rel_imp", "relative_import"]
+
+[tool.ruff.lint.per-file-ignores]
+# exec() is how test_unit.py fakes a __main__ globals dict
+"rel_imp_tests/test_unit.py" = ["S102"]
+# imports must run after rel_imp.init() to exercise the feature
+"rel_imp_tests/test_global_import*.py" = ["E402"]
+"rel_imp_tests/package_test_parent*/__init__.py" = ["E402"]

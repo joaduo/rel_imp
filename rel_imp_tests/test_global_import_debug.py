@@ -1,9 +1,7 @@
-'''
-
-'''
 import unittest
 
 import rel_imp
+
 rel_imp.init(log_level=rel_imp.DEBUG)
 import rel_imp_tests.test_global_import
 

@@ -18,13 +18,12 @@ this package before any relative import
 Make sure your PYTHONPATH is correctly set to solve the relative path of the
 submodule/subpackage.
 '''
+import importlib
+import os
+import sys
+import traceback
 from inspect import currentframe
 from os import path
-import importlib
-import sys
-import os
-import traceback
-
 
 __all__ = ['init']
 
@@ -44,14 +43,19 @@ def _get_search_path(main_file_dir, sys_path):
         pth = path.abspath(pth)
         # filter out __main__'s file directory, it will be in the sys.path
         # filter in parent paths containing the package
-        if (pth != main_file_dir
-                and pth == path.commonprefix((pth, main_file_dir))):
+        # (commonpath works on path components, unlike commonprefix which
+        # compares raw strings and would match eg. /foo/bar for /foo/barbaz)
+        try:
+            is_parent = path.commonpath((pth, main_file_dir)) == pth
+        except ValueError:
+            # mixed absolute/relative paths or different drives (Windows)
+            is_parent = False
+        if pth != main_file_dir and is_parent:
             paths.append(pth)
     # check if we have results
     if paths:
-        # we found candidates, look for the largest(closest) parent search path
-        paths.sort()
-        return paths[-1]
+        # we found candidates, return the longest (closest) parent search path
+        return max(paths, key=len)
 
 
 def _print_exc(e):
@@ -59,9 +63,9 @@ def _print_exc(e):
     Log exception as error.
     :param e: exception to be logged.
     '''
-    msg = ('Exception enabling relative_import for __main__. Ignoring it: %r'
+    msg = ('Exception enabling relative_import for __main__. Ignoring it: {!r}'
            '\n  relative_import won\'t be enabled.')
-    _log_error(msg % e)
+    _log_error(msg.format(e))
 
 
 def _try_search_paths(main_globals):
@@ -107,20 +111,18 @@ def _solve_pkg(main_globals):
     # find __main__'s file directory and search path
     main_dir, search_path = _try_search_paths(main_globals)
     if not search_path:
-        _log_debug('Could not solve parent python path for %r' % main_dir)
+        _log_debug(f'Could not solve parent python path for {main_dir!r}')
         # no candidates for search path, return
         return
     # solve package name from search path
     pkg_str = path.relpath(main_dir, search_path).replace(path.sep, '.')
     # Remove wrong starting string for site-packages
-    site_pkgs = 'site-packages.'
-    if pkg_str.startswith(site_pkgs):
-        pkg_str = pkg_str[len(site_pkgs):]
+    pkg_str = pkg_str.removeprefix('site-packages.')
     assert pkg_str
-    _log_debug('pkg_str=%r' % pkg_str)
+    _log_debug(f'{pkg_str=!r}')
     # import the package in order to set __package__ value later
     try:
-        if '__init__.py' in main_globals['__file__']:
+        if path.basename(main_globals['__file__']) == '__init__.py':
             _log_debug('__init__ script. This module is its own package')
             # The __main__ is __init__.py => its own package
             # If we treat it as a normal module it would be imported twice
@@ -135,7 +137,7 @@ def _solve_pkg(main_globals):
             if parent_pkg_str:
                 importlib.import_module(parent_pkg_str)
         else:
-            _log_debug('Importing package %r' % pkg_str)
+            _log_debug(f'Importing package {pkg_str!r}')
             # we need to import the package to be available
             importlib.import_module(pkg_str)
         # finally enable relative import
@@ -206,8 +208,16 @@ def init(log_level=ERROR):
     # find caller's frame
     frame = currentframe()
     # go 1 frame back to find who imported us
-    frame = frame.f_back
-    _init(frame, log_level)
+    if frame:
+        frame = frame.f_back
+    if frame is None:
+        _log_error('Could not get caller frame. relative_import won\'t be enabled.')
+        return
+    try:
+        _init(frame, log_level)
+    finally:
+        # break the reference cycle created by keeping the frame alive
+        del frame
 
 
 def init_implicitly(log_level=ERROR):
@@ -225,9 +235,16 @@ def init_implicitly(log_level=ERROR):
         _initialized = True
     # find caller's frame
     frame = currentframe()
-    while frame.f_globals['__name__'] != '__main__':
+    while frame and frame.f_globals.get('__name__') != '__main__':
         frame = frame.f_back
-    _init(frame, log_level)
+    if frame is None:
+        _log_error('Could not find __main__ frame. relative_import won\'t be enabled.')
+        return
+    try:
+        _init(frame, log_level)
+    finally:
+        # break the reference cycle created by keeping the frame alive
+        del frame
 
 
 def _init(frame, log_level=ERROR):
@@ -248,9 +265,9 @@ def _init(frame, log_level=ERROR):
     file_ = main_globals.get('__file__')
     if pkg or not file_:
         _log_debug('Package solved or init was called from interactive '
-                   'console. __package__=%r, __file__=%r' % (pkg, file_))
+                   f'console. __package__={pkg!r}, __file__={file_!r}')
         return
     try:
         _solve_pkg(main_globals)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - init must never break __main__
         _print_exc(e)

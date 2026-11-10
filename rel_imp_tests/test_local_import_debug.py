@@ -1,9 +1,7 @@
-'''
-
-'''
 import unittest
-import rel_imp_tests.test_local_import
+
 import rel_imp
+import rel_imp_tests.test_local_import
 
 
 class TestRelativeImport(rel_imp_tests.test_local_import.TestRelativeImport):

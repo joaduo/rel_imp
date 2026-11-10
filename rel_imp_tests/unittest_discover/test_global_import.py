@@ -1,9 +1,7 @@
-'''
-
-'''
 import unittest
 
 import rel_imp
+
 rel_imp.init()
 from ..relimported1 import example_function
 

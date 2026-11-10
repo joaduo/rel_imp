@@ -1,8 +1,9 @@
-import unittest
-from rel_imp import _print_exc, _get_search_path, _solve_pkg, _try_search_paths
-from os import path
 import sys
-from six.moves import StringIO
+import unittest
+from io import StringIO
+from os import path
+
+from rel_imp import _get_search_path, _print_exc, _solve_pkg, _try_search_paths
 
 
 class TestRelativeImport(unittest.TestCase):
@@ -15,7 +16,7 @@ class TestRelativeImport(unittest.TestCase):
         _try_search_paths(globals())
         main_file_dir = path.dirname(path.abspath(__file__))
         _get_search_path(main_file_dir, sys.path)
-        main_globals = dict(__file__=__file__)
+        main_globals = {'__file__': __file__}
         pkg = _solve_pkg(main_globals)
         self.assertEqual(pkg, 'rel_imp_tests')
         self.assertTrue(pkg in sys.modules)

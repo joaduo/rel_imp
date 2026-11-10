@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 '''
 Copyright (c) 2015 Joaquin Duo - File under MIT License
 

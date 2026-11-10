@@ -1,8 +1,6 @@
-'''
-
-'''
-import imp
+import importlib
 import unittest
+
 import rel_imp
 
 
@@ -24,7 +22,7 @@ class TestRelativeImport(unittest.TestCase):
     def test_reload(self):
         import rel_imp
         rel_imp.init(self._log_level)
-        rel_imp = imp.reload(rel_imp)
+        rel_imp = importlib.reload(rel_imp)
         rel_imp.init(self._log_level)
 
 if __name__ == "__main__":
