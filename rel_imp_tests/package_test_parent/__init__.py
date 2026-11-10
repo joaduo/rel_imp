@@ -1,8 +1,7 @@
-'''
-
-'''
 import unittest
+
 import rel_imp
+
 rel_imp.init(log_level=rel_imp.DEBUG)
 from ..relimported1 import example_function
 

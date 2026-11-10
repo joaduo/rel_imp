@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pushd /tmp
-    pip3 uninstall rel_imp
+    pip3 uninstall -y rel_imp
 popd
 
 # We need the current path
@@ -50,8 +50,7 @@ elif [[ "$*" == *--py3* ]] ; then
   pycmds="python3"
 else
   #Test commands on current platform
-  pycmds="python
-python3"
+  pycmds="python3"
 fi
 
 
